@@ -26,7 +26,7 @@
 #include "libirpc.h"
 
 static int
-init_connection_or_die()
+init_connection_or_die(int port)
 {
     int sockfd;
 	struct sockaddr_in self;
@@ -37,7 +37,7 @@ init_connection_or_die()
     bzero(&self, sizeof(self));
     
     self.sin_family = AF_INET;
-    self.sin_port = htons(9999);
+    self.sin_port = htons(port);
     self.sin_addr.s_addr = INADDR_ANY;
     
     if (bind(sockfd, (struct sockaddr *)&self, sizeof(self)) != 0)
@@ -89,9 +89,16 @@ done:
 
 int main(int argc, char *argv[])
 {   
-    int sock;
+    int sock, port;
     
-    sock = init_connection_or_die();
+    if (argc < 2) {
+        printf("irpc_server: port\n");
+        return 1;
+    }
+    
+    sscanf(argv[1], "%d", &port);
+    sock = init_connection_or_die(port);
+    
     server_loop(sock);
     
     close(sock);

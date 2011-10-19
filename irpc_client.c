@@ -145,7 +145,7 @@ int main(int argc, char **argv)
     
     bzero(&info, sizeof(struct irpc_info));
 
-    if (argc < 2) {
+    if (argc < 3) {
         printf("irpc_client: ip port\n");
         return retval;
     }

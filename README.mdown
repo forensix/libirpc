@@ -2,7 +2,6 @@ Description
 -----------
 
 libirpc allows you to access USB devices over IP through RPC.
-Internally libirpc uses libusb.
 
 Note
 ----
@@ -11,6 +10,7 @@ Currently libirpc is in an early development stage. The following
 methods are supported:
 
 - libusb_init
+- libusb_exit
 - libusb_get_device_list
 - libusb_get_device_descriptor
 
@@ -23,10 +23,10 @@ Example
 -------
 
 The project provides a rudimentary client-server implementation.  The
-client connects to the server and shows some device information on
-the remote system.
+client connects to the server and shows some information about the USB
+devices connected on the remote system.
 
-The client and server are commandline tools. Just go through the
+The client and server are command line tools. Just go through the
 following steps:
 
 On the remote system type
