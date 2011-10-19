@@ -31,13 +31,11 @@ following steps:
 
 On the remote system type
 
-<b>$ ./irpc_server</b>
+<b>$ ./irpc_server port</b>
 
 on the client side type
 
 <b>$ ./irpc_client IP PORT</b>
-
-The default port is 9999.
 
 Conclusion
 ----------
