@@ -64,6 +64,7 @@ libusb_device_for_session_data(int session_data)
            __func__,
            session_data);
 done:
+    libusb_free_device_list(list, 1);
     return f;
 }
 
@@ -197,6 +198,8 @@ irpc_send_usb_get_device_list(struct irpc_connection_info *ci)
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
 	tpl_free(tn);
+    
+    libusb_free_device_list(list, 1);
 }
 
 
