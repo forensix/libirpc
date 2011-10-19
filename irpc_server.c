@@ -94,5 +94,7 @@ int main(int argc, char *argv[])
     sock = init_connection_or_die();
     server_loop(sock);
     
+    close(sock);
+    
 	return 0;
 }
