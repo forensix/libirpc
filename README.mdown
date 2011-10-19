@@ -31,7 +31,7 @@ following steps:
 
 On the remote system type
 
-<b>$ ./irpc_server port</b>
+<b>$ ./irpc_server PORT</b>
 
 on the client side type
 
