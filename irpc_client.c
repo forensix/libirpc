@@ -61,13 +61,13 @@ connect_or_die(const char *ip, int port)
     int sock = create_client_socket();
     
     if (sock == -1) {
-		fprintf(stderr, "Error! Failed to create a client socket: %s\n", ip);
-		exit(1);
+        fprintf(stderr, "Error! Failed to create a client socket: %s\n", ip);
+        exit(1);
 	}
     
     if (try_connect(sock, ip, port) == -1) {
         fprintf(stderr, "Error! Failed to connect to a server at: %s\n", ip);
-		exit(1);
+        exit(1);
     }
     
     return sock;
@@ -143,8 +143,8 @@ int main(int argc, char **argv)
     bzero(&info, sizeof(struct irpc_info));
 
     if (argc < 2) {
-		printf("irpc_client: ip port\n");
-		return retval;
+        printf("irpc_client: ip port\n");
+        return retval;
 	}
     
     sscanf(argv[2], "%d", &port);

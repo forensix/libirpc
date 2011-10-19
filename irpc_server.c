@@ -36,12 +36,12 @@ init_connection_or_die()
     
     bzero(&self, sizeof(self));
     
-	self.sin_family = AF_INET;
-	self.sin_port = htons(9999);
-	self.sin_addr.s_addr = INADDR_ANY;
+    self.sin_family = AF_INET;
+    self.sin_port = htons(9999);
+    self.sin_addr.s_addr = INADDR_ANY;
     
     if (bind(sockfd, (struct sockaddr *)&self, sizeof(self)) != 0)
-		exit(1);
+        exit(1);
     
     if (listen(sockfd, 20) != 0)
         exit(1);
@@ -96,5 +96,5 @@ int main(int argc, char *argv[])
     
     close(sock);
     
-	return 0;
+    return 0;
 }
