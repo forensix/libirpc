@@ -47,7 +47,7 @@ struct irpc_connection_info {
 struct irpc_device {
     int bus_number;
     int device_address;
-	int num_configurations;
+    int num_configurations;
     int session_data; // Just an identifier.
 };
 
