@@ -162,5 +162,5 @@ int main(int argc, char **argv)
     if (retval < 0)
         printf("irpc_client: usb_print_device_ids failed\n"); 
     
-    return 0;
+    return retval;
 }

@@ -47,7 +47,7 @@ static int dbgmsg = 1;
 libusb_device *
 libusb_device_for_session_data(int session_data)
 {
-    libusb_device **list;
+    libusb_device **list = NULL;
     libusb_device *f = NULL;
     
     int i;
@@ -75,8 +75,8 @@ done:
 void
 irpc_send_func(irpc_func_t func, int sock)
 {
-    tpl_node *tn = tpl_map("i", &func);
-	tpl_pack(tn, 0);
+    tpl_node *tn = tpl_map(IRPC_INT_FMT, &func);
+    tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
     tpl_free(tn);	
 }
@@ -85,7 +85,7 @@ irpc_func_t
 irpc_read_func(int sock)
 {
     irpc_func_t func;
-    tpl_node *tn = tpl_map("i", &func);
+    tpl_node *tn = tpl_map(IRPC_INT_FMT, &func);
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
@@ -119,7 +119,7 @@ irpc_recv_usb_init(struct irpc_connection_info *ci)
 void
 irpc_send_usb_init(struct irpc_connection_info *ci)
 {
-    tpl_node *tn;
+    tpl_node *tn = NULL;
     int sock = ci->client_sock;
     irpc_retval_t retval = libusb_init(&irpc_ctx);
     
@@ -164,7 +164,7 @@ irpc_recv_usb_get_device_list(struct irpc_connection_info *ci,
                  devlist->devs,
                  IRPC_MAX_DEVS);
     tpl_load(tn, TPL_FD, sock);
-	tpl_unpack(tn, 0);
+    tpl_unpack(tn, 0);
     tpl_free(tn);
 }
 
@@ -172,7 +172,7 @@ void
 irpc_send_usb_get_device_list(struct irpc_connection_info *ci)
 {
     tpl_node *tn = NULL;
-    libusb_device **list;
+    libusb_device **list = NULL;
     struct irpc_device_list devlist;
     int sock = ci->client_sock;
     
@@ -197,11 +197,10 @@ irpc_send_usb_get_device_list(struct irpc_connection_info *ci)
                  IRPC_MAX_DEVS);
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
-	tpl_free(tn);
+    tpl_free(tn);
     
     libusb_free_device_list(list, 1);
 }
-
 
 void
 irpc_usb_get_device_list(struct irpc_connection_info *ci,
@@ -233,13 +232,13 @@ irpc_recv_usb_get_device_descriptor(struct irpc_connection_info *ci,
     tn = tpl_map(IRPC_DEV_FMT, idev);
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
-	tpl_free(tn);
+    tpl_free(tn);
     
     // Read libusb_get_device_descriptor packet.
     tn = tpl_map(IRPC_DESC_FMT, desc);
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
-	tpl_free(tn);
+    tpl_free(tn);
     
     return desc->retval;
 }
@@ -247,11 +246,11 @@ irpc_recv_usb_get_device_descriptor(struct irpc_connection_info *ci,
 void
 irpc_send_usb_get_device_descriptor(struct irpc_connection_info *ci)
 {
-    tpl_node *tn;
+    tpl_node *tn = NULL;
+    libusb_device *dev = NULL;
     irpc_device idev;
-    libusb_device *dev;
-    struct libusb_device_descriptor desc;
     struct irpc_device_descriptor idesc;
+    struct libusb_device_descriptor desc;
     int sock = ci->client_sock;
     
     bzero(&idesc, sizeof(struct irpc_device_descriptor));
@@ -260,7 +259,7 @@ irpc_send_usb_get_device_descriptor(struct irpc_connection_info *ci)
     tn = tpl_map(IRPC_DEV_FMT, &idev);
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
-	tpl_free(tn);
+    tpl_free(tn);
     
     // Find corresponding usb_device.
     dev = libusb_device_for_session_data(idev.session_data);
@@ -289,14 +288,14 @@ irpc_send_usb_get_device_descriptor(struct irpc_connection_info *ci)
     idesc.bNumConfigurations = desc.bNumConfigurations;
     
     goto send;
-    
 fail:
     idesc.retval = IRPC_FAILURE;
 send:
+    // Send libusb_get_device_descriptor packet.
     tn = tpl_map(IRPC_DESC_FMT, &idesc);
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
-	tpl_free(tn);  
+    tpl_free(tn);  
 }
 
 irpc_retval_t
@@ -342,15 +341,3 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
     
     return retval;
 }
-
-
-
-
-
-
-
-
-
-
-
-

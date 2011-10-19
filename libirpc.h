@@ -63,20 +63,20 @@ struct irpc_device_list {
 
 struct irpc_device_descriptor {
     irpc_retval_t retval; 
-	int bLength;
+    int bLength;
     int bDescriptorType;
     int bcdUSB;
     int bDeviceClass;
-	int bDeviceSubClass;
-	int bDeviceProtocol;    
-	int bMaxPacketSize0;    
-	int idVendor;    
-	int idProduct;    
-	int bcdDevice;    
-	int iManufacturer;    
-	int iProduct;    
-	int iSerialNumber;    
-	int bNumConfigurations;
+    int bDeviceSubClass;
+    int bDeviceProtocol;    
+    int bMaxPacketSize0;    
+    int idVendor;    
+    int idProduct;    
+    int bcdDevice;    
+    int iManufacturer;    
+    int iProduct;    
+    int iSerialNumber;    
+    int bNumConfigurations;
 };
 
 struct irpc_info {
