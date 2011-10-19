@@ -57,7 +57,7 @@
 		A5BC906D144EC4F400B57F57 /* tpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tpl.h; sourceTree = "<group>"; };
 		A5BC908C144EC51800B57F57 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		A5BC908D144EC51800B57F57 /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.mdown; sourceTree = "<group>"; };
-		A5BC908F144EC59300B57F57 /* libirpc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libirpc.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5BC908F144EC59300B57F57 /* libirpc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = libirpc.a; path = "/Users/hekt0r/Desktop/git/irpc/build/Debug-iphonesimulator/libirpc.a"; sourceTree = "<absolute>"; };
 		A5BC9091144EC5A400B57F57 /* libirpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libirpc.c; sourceTree = "<group>"; };
 		A5BC9092144EC5A400B57F57 /* libirpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirpc.h; sourceTree = "<group>"; };
 		A5BC9098144EC63100B57F57 /* irpc_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = irpc_client.c; sourceTree = "<group>"; };
@@ -85,7 +85,6 @@
 				A5BC906B144EC4F400B57F57 /* tpl */,
 				A5BC908C144EC51800B57F57 /* Makefile */,
 				A5BC908D144EC51800B57F57 /* README.mdown */,
-				A5BC908F144EC59300B57F57 /* libirpc.a */,
 			);
 			name = irpc;
 			sourceTree = "<group>";
