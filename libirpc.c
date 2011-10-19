@@ -145,6 +145,24 @@ irpc_usb_init(struct irpc_connection_info *ci,
 }
 
 // -----------------------------------------------------------------------------
+#pragma mark libusb_exit
+// -----------------------------------------------------------------------------
+
+void
+irpc_usb_exit(struct irpc_connection_info *ci,
+              irpc_context_t ctx)
+{    
+    if (ctx == IRPC_CONTEXT_SERVER) {
+        libusb_exit(irpc_ctx);
+        return;
+    }
+    irpc_func_t func = IRPC_USB_EXIT;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+}
+
+// -----------------------------------------------------------------------------
 #pragma mark libusb_get_device_list
 // -----------------------------------------------------------------------------
 
@@ -327,6 +345,9 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
     {
     case IRPC_USB_INIT:
         retval = irpc_usb_init(&info->ci, ctx);
+        break;
+    case IRPC_USB_EXIT:
+        (void)irpc_usb_exit(&info->ci, ctx);
         break;
     case IRPC_USB_GET_DEVICE_LIST:
         (void)irpc_usb_get_device_list(&info->ci, ctx, &info->devlist);

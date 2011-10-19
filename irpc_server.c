@@ -79,7 +79,7 @@ server_loop(int sock)
         irpc_func_t func = irpc_read_func(info.ci.client_sock);
         irpc_call(func, IRPC_CONTEXT_SERVER, &info);
 
-        if (func == IRPC_USB_GET_DEVICE_DESCRIPTOR)
+        if (func == IRPC_USB_EXIT)
             goto done;
 	}
     

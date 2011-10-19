@@ -21,6 +21,7 @@
 /* Identifies the function call. */
 enum irpc_func {
     IRPC_USB_INIT,                  /* libusb_init */
+    IRPC_USB_EXIT,                  /* libusb_exit */
     IRPC_USB_GET_DEVICE_LIST,       /* libusb_get_device_list */
     IRPC_USB_GET_DEVICE_DESCRIPTOR, /* libusb_get_device_descriptor */
 };

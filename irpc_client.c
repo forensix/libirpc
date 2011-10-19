@@ -113,25 +113,28 @@ usb_print_device_ids(struct irpc_info *info)
     irpc_retval_t retval = IRPC_FAILURE;
     
     struct irpc_device_list devlist = info->devlist;
-
-    int i = 0;
-    for (; i < devlist.n_devs; i++) {
-        irpc_device dev = devlist.devs[i];
+    info->dev = devlist.devs[0];
         
-        info->dev = dev;
+    retval = irpc_call(func, ctx, info);
+    if (retval == IRPC_FAILURE)
+        goto done;
         
-        retval = irpc_call(func, ctx, info);
-        if (retval == IRPC_FAILURE)
-            goto done;
+    struct irpc_device_descriptor desc = info->desc;
         
-        struct irpc_device_descriptor desc = info->desc;
-        
-        printf("irpc_client: idVendor:  %04x\n", desc.idVendor);
-        printf("irpc_client: idProduct: %04x\n", desc.idProduct);
-    }
+    printf("irpc_client: idVendor:  %04x\n", desc.idVendor);
+    printf("irpc_client: idProduct: %04x\n", desc.idProduct);
     
 done:
     return retval;
+}
+
+static void
+usb_exit(struct irpc_info *info)
+{
+    irpc_func_t func = IRPC_USB_EXIT;
+    irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
+    
+    irpc_call(func, ctx, info);
 }
 
 int main(int argc, char **argv)
@@ -145,7 +148,7 @@ int main(int argc, char **argv)
     if (argc < 2) {
         printf("irpc_client: ip port\n");
         return retval;
-	}
+    }
     
     sscanf(argv[2], "%d", &port);
     info.ci.server_sock = connect_or_die(argv[1], port);
@@ -160,7 +163,9 @@ int main(int argc, char **argv)
     
     retval = usb_print_device_ids(&info);
     if (retval < 0)
-        printf("irpc_client: usb_print_device_ids failed\n"); 
+        printf("irpc_client: usb_print_device_ids failed\n");
+    
+    usb_exit(&info);
     
     return retval;
 }
