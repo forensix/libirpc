@@ -37,6 +37,9 @@ on the client side type
 
 <b>$ ./irpc_client IP PORT</b>
 
+When u want to access the server through a router, you need to enable
+port forwarding.
+
 Conclusion
 ----------
 
