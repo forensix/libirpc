@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A5BC906E144EC4F400B57F57 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9058144EC4F400B57F57 /* config.h */; };
+		A5BC906F144EC4F400B57F57 /* libusb.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9059144EC4F400B57F57 /* libusb.h */; };
+		A5BC9070144EC4F400B57F57 /* libusbi.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC905A144EC4F400B57F57 /* libusbi.h */; };
+		A5BC9071144EC4F400B57F57 /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC905C144EC4F400B57F57 /* config.h */; };
+		A5BC9072144EC4F400B57F57 /* darwin_usb.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC905D144EC4F400B57F57 /* darwin_usb.c */; };
+		A5BC9073144EC4F400B57F57 /* darwin_usb.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC905E144EC4F400B57F57 /* darwin_usb.h */; };
+		A5BC9074144EC4F400B57F57 /* libusb.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC905F144EC4F400B57F57 /* libusb.h */; };
+		A5BC9075144EC4F400B57F57 /* libusbi.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9060144EC4F400B57F57 /* libusbi.h */; };
+		A5BC9076144EC4F400B57F57 /* linux_usbfs.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9061144EC4F400B57F57 /* linux_usbfs.c */; };
+		A5BC9077144EC4F400B57F57 /* linux_usbfs.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9062144EC4F400B57F57 /* linux_usbfs.h */; };
+		A5BC9078144EC4F400B57F57 /* poll_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9063144EC4F400B57F57 /* poll_posix.h */; };
+		A5BC9079144EC4F400B57F57 /* poll_windows.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9064144EC4F400B57F57 /* poll_windows.c */; };
+		A5BC907A144EC4F400B57F57 /* poll_windows.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9065144EC4F400B57F57 /* poll_windows.h */; };
+		A5BC907B144EC4F400B57F57 /* threads_posix.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9066144EC4F400B57F57 /* threads_posix.h */; };
+		A5BC907C144EC4F400B57F57 /* threads_windows.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9067144EC4F400B57F57 /* threads_windows.c */; };
+		A5BC907D144EC4F400B57F57 /* threads_windows.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9068144EC4F400B57F57 /* threads_windows.h */; };
+		A5BC907E144EC4F400B57F57 /* windows_usb.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9069144EC4F400B57F57 /* windows_usb.c */; };
+		A5BC907F144EC4F400B57F57 /* windows_usb.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC906A144EC4F400B57F57 /* windows_usb.h */; };
+		A5BC9080144EC4F400B57F57 /* tpl.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC906C144EC4F400B57F57 /* tpl.c */; };
+		A5BC9081144EC4F400B57F57 /* tpl.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC906D144EC4F400B57F57 /* tpl.h */; };
+		A5BC908E144EC51800B57F57 /* Makefile in Sources */ = {isa = PBXBuildFile; fileRef = A5BC908C144EC51800B57F57 /* Makefile */; };
+		A5BC9093144EC5A400B57F57 /* libirpc.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9091144EC5A400B57F57 /* libirpc.c */; };
+		A5BC9094144EC5A400B57F57 /* libirpc.h in Headers */ = {isa = PBXBuildFile; fileRef = A5BC9092144EC5A400B57F57 /* libirpc.h */; };
+		A5BC909A144EC63100B57F57 /* irpc_client.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9098144EC63100B57F57 /* irpc_client.c */; };
+		A5BC909B144EC63100B57F57 /* irpc_server.c in Sources */ = {isa = PBXBuildFile; fileRef = A5BC9099144EC63100B57F57 /* irpc_server.c */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A5BC9058144EC4F400B57F57 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		A5BC9059144EC4F400B57F57 /* libusb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libusb.h; sourceTree = "<group>"; };
+		A5BC905A144EC4F400B57F57 /* libusbi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libusbi.h; sourceTree = "<group>"; };
+		A5BC905C144EC4F400B57F57 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = "<group>"; };
+		A5BC905D144EC4F400B57F57 /* darwin_usb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = darwin_usb.c; sourceTree = "<group>"; };
+		A5BC905E144EC4F400B57F57 /* darwin_usb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = darwin_usb.h; sourceTree = "<group>"; };
+		A5BC905F144EC4F400B57F57 /* libusb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libusb.h; sourceTree = "<group>"; };
+		A5BC9060144EC4F400B57F57 /* libusbi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libusbi.h; sourceTree = "<group>"; };
+		A5BC9061144EC4F400B57F57 /* linux_usbfs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = linux_usbfs.c; sourceTree = "<group>"; };
+		A5BC9062144EC4F400B57F57 /* linux_usbfs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linux_usbfs.h; sourceTree = "<group>"; };
+		A5BC9063144EC4F400B57F57 /* poll_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = poll_posix.h; sourceTree = "<group>"; };
+		A5BC9064144EC4F400B57F57 /* poll_windows.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = poll_windows.c; sourceTree = "<group>"; };
+		A5BC9065144EC4F400B57F57 /* poll_windows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = poll_windows.h; sourceTree = "<group>"; };
+		A5BC9066144EC4F400B57F57 /* threads_posix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threads_posix.h; sourceTree = "<group>"; };
+		A5BC9067144EC4F400B57F57 /* threads_windows.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = threads_windows.c; sourceTree = "<group>"; };
+		A5BC9068144EC4F400B57F57 /* threads_windows.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = threads_windows.h; sourceTree = "<group>"; };
+		A5BC9069144EC4F400B57F57 /* windows_usb.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = windows_usb.c; sourceTree = "<group>"; };
+		A5BC906A144EC4F400B57F57 /* windows_usb.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = windows_usb.h; sourceTree = "<group>"; };
+		A5BC906C144EC4F400B57F57 /* tpl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = tpl.c; sourceTree = "<group>"; };
+		A5BC906D144EC4F400B57F57 /* tpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tpl.h; sourceTree = "<group>"; };
+		A5BC908C144EC51800B57F57 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		A5BC908D144EC51800B57F57 /* README.mdown */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.mdown; sourceTree = "<group>"; };
+		A5BC908F144EC59300B57F57 /* libirpc.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libirpc.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		A5BC9091144EC5A400B57F57 /* libirpc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = libirpc.c; sourceTree = "<group>"; };
+		A5BC9092144EC5A400B57F57 /* libirpc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = libirpc.h; sourceTree = "<group>"; };
+		A5BC9098144EC63100B57F57 /* irpc_client.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = irpc_client.c; sourceTree = "<group>"; };
+		A5BC9099144EC63100B57F57 /* irpc_server.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = irpc_server.c; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D2AAC07C0554694100DB518D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0867D691FE84028FC02AAC07 /* irpc */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC9092144EC5A400B57F57 /* libirpc.h */,
+				A5BC9091144EC5A400B57F57 /* libirpc.c */,
+				A5BC9095144EC62600B57F57 /* examples */,
+				A5BC9057144EC4F400B57F57 /* libusb */,
+				A5BC906B144EC4F400B57F57 /* tpl */,
+				A5BC908C144EC51800B57F57 /* Makefile */,
+				A5BC908D144EC51800B57F57 /* README.mdown */,
+				A5BC908F144EC59300B57F57 /* libirpc.a */,
+			);
+			name = irpc;
+			sourceTree = "<group>";
+		};
+		A5BC9057144EC4F400B57F57 /* libusb */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC9058144EC4F400B57F57 /* config.h */,
+				A5BC9059144EC4F400B57F57 /* libusb.h */,
+				A5BC905A144EC4F400B57F57 /* libusbi.h */,
+				A5BC905B144EC4F400B57F57 /* os */,
+			);
+			path = libusb;
+			sourceTree = "<group>";
+		};
+		A5BC905B144EC4F400B57F57 /* os */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC905C144EC4F400B57F57 /* config.h */,
+				A5BC905D144EC4F400B57F57 /* darwin_usb.c */,
+				A5BC905E144EC4F400B57F57 /* darwin_usb.h */,
+				A5BC905F144EC4F400B57F57 /* libusb.h */,
+				A5BC9060144EC4F400B57F57 /* libusbi.h */,
+				A5BC9061144EC4F400B57F57 /* linux_usbfs.c */,
+				A5BC9062144EC4F400B57F57 /* linux_usbfs.h */,
+				A5BC9063144EC4F400B57F57 /* poll_posix.h */,
+				A5BC9064144EC4F400B57F57 /* poll_windows.c */,
+				A5BC9065144EC4F400B57F57 /* poll_windows.h */,
+				A5BC9066144EC4F400B57F57 /* threads_posix.h */,
+				A5BC9067144EC4F400B57F57 /* threads_windows.c */,
+				A5BC9068144EC4F400B57F57 /* threads_windows.h */,
+				A5BC9069144EC4F400B57F57 /* windows_usb.c */,
+				A5BC906A144EC4F400B57F57 /* windows_usb.h */,
+			);
+			path = os;
+			sourceTree = "<group>";
+		};
+		A5BC906B144EC4F400B57F57 /* tpl */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC906C144EC4F400B57F57 /* tpl.c */,
+				A5BC906D144EC4F400B57F57 /* tpl.h */,
+			);
+			path = tpl;
+			sourceTree = "<group>";
+		};
+		A5BC9095144EC62600B57F57 /* examples */ = {
+			isa = PBXGroup;
+			children = (
+				A5BC9098144EC63100B57F57 /* irpc_client.c */,
+				A5BC9099144EC63100B57F57 /* irpc_server.c */,
+			);
+			name = examples;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC07A0554694100DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5BC906E144EC4F400B57F57 /* config.h in Headers */,
+				A5BC906F144EC4F400B57F57 /* libusb.h in Headers */,
+				A5BC9070144EC4F400B57F57 /* libusbi.h in Headers */,
+				A5BC9071144EC4F400B57F57 /* config.h in Headers */,
+				A5BC9073144EC4F400B57F57 /* darwin_usb.h in Headers */,
+				A5BC9074144EC4F400B57F57 /* libusb.h in Headers */,
+				A5BC9075144EC4F400B57F57 /* libusbi.h in Headers */,
+				A5BC9077144EC4F400B57F57 /* linux_usbfs.h in Headers */,
+				A5BC9078144EC4F400B57F57 /* poll_posix.h in Headers */,
+				A5BC907A144EC4F400B57F57 /* poll_windows.h in Headers */,
+				A5BC907B144EC4F400B57F57 /* threads_posix.h in Headers */,
+				A5BC907D144EC4F400B57F57 /* threads_windows.h in Headers */,
+				A5BC907F144EC4F400B57F57 /* windows_usb.h in Headers */,
+				A5BC9081144EC4F400B57F57 /* tpl.h in Headers */,
+				A5BC9094144EC5A400B57F57 /* libirpc.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC07D0554694100DB518D /* irpc */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "irpc" */;
+			buildPhases = (
+				D2AAC07A0554694100DB518D /* Headers */,
+				D2AAC07B0554694100DB518D /* Sources */,
+				D2AAC07C0554694100DB518D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = irpc;
+			productName = irpc;
+			productReference = A5BC908F144EC59300B57F57 /* libirpc.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0867D690FE84028FC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "irpc" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
+			mainGroup = 0867D691FE84028FC02AAC07 /* irpc */;
+			productRefGroup = 0867D691FE84028FC02AAC07 /* irpc */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC07D0554694100DB518D /* irpc */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC07B0554694100DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A5BC9072144EC4F400B57F57 /* darwin_usb.c in Sources */,
+				A5BC9076144EC4F400B57F57 /* linux_usbfs.c in Sources */,
+				A5BC9079144EC4F400B57F57 /* poll_windows.c in Sources */,
+				A5BC907C144EC4F400B57F57 /* threads_windows.c in Sources */,
+				A5BC907E144EC4F400B57F57 /* windows_usb.c in Sources */,
+				A5BC9080144EC4F400B57F57 /* tpl.c in Sources */,
+				A5BC908E144EC51800B57F57 /* Makefile in Sources */,
+				A5BC9093144EC5A400B57F57 /* libirpc.c in Sources */,
+				A5BC909A144EC63100B57F57 /* irpc_client.c in Sources */,
+				A5BC909B144EC63100B57F57 /* irpc_server.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB921F08733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				DSTROOT = /tmp/irpc.dst;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = irpc_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = irpc;
+			};
+			name = Debug;
+		};
+		1DEB922008733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				DSTROOT = /tmp/irpc.dst;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = irpc_Prefix.pch;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = irpc;
+			};
+			name = Release;
+		};
+		1DEB922308733DC00010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		1DEB922408733DC00010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OTHER_LDFLAGS = "-ObjC";
+				PREBINDING = NO;
+				SDKROOT = iphoneos;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB921E08733DC00010E9CD /* Build configuration list for PBXNativeTarget "irpc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB921F08733DC00010E9CD /* Debug */,
+				1DEB922008733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB922208733DC00010E9CD /* Build configuration list for PBXProject "irpc" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB922308733DC00010E9CD /* Debug */,
+				1DEB922408733DC00010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0867D690FE84028FC02AAC07 /* Project object */;
+}
