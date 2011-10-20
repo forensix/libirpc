@@ -25,6 +25,7 @@ enum irpc_func {
     IRPC_USB_GET_DEVICE_LIST,           /* libusb_get_device_list */
     IRPC_USB_GET_DEVICE_DESCRIPTOR,     /* libusb_get_device_descriptor */
     IRPC_USB_OPEN_DEVICE_WITH_VID_PID,  /* libusb_open_device_with_vid_pid */
+    IRPC_USB_CLOSE,                     /* libusb_close */
 };
 
 enum irpc_context {

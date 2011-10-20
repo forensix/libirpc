@@ -24,8 +24,11 @@
 #include "libusbi.h"
 #include "tpl.h"
 
-// TODO: Add context handler for multible clients.
+// TODO: Add context handler for multiple clients.
 static libusb_context *irpc_ctx = NULL;
+
+// TODO: Add device handler for multiple clients.
+static struct libusb_device_handle *irpc_handle = NULL; 
 
 static int dbgmsg = 1;
 
@@ -162,6 +165,7 @@ irpc_usb_exit(struct irpc_connection_info *ci,
     int sock = ci->server_sock;
     
     irpc_send_func(func, sock);
+    irpc_ctx = NULL;
 }
 
 // -----------------------------------------------------------------------------
@@ -367,7 +371,6 @@ void
 irpc_send_usb_open_device_with_vid_pid(struct irpc_connection_info *ci)
 {
     tpl_node *tn = NULL;
-    libusb_device_handle *handle = NULL;
     irpc_device_handle ihandle;
     int vendor_id, product_id;
     int sock = ci->client_sock;
@@ -381,15 +384,21 @@ irpc_send_usb_open_device_with_vid_pid(struct irpc_connection_info *ci)
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
+    
+    // Close an already opened handle.
+    if (irpc_handle) {
+        libusb_close(irpc_handle);
+        irpc_handle = NULL;
+    }
    
-    handle = libusb_open_device_with_vid_pid(irpc_ctx, vendor_id, product_id);
-    if (!handle)
+    irpc_handle = libusb_open_device_with_vid_pid(irpc_ctx, vendor_id, product_id);
+    if (!irpc_handle)
         goto send;
     
-    ihandle.dev.bus_number = handle->dev->bus_number;
-    ihandle.dev.device_address = handle->dev->device_address;
-    ihandle.dev.num_configurations = handle->dev->num_configurations;
-    ihandle.dev.session_data = handle->dev->session_data;
+    ihandle.dev.bus_number = irpc_handle->dev->bus_number;
+    ihandle.dev.device_address = irpc_handle->dev->device_address;
+    ihandle.dev.num_configurations = irpc_handle->dev->num_configurations;
+    ihandle.dev.session_data = irpc_handle->dev->session_data;
     
 send:
     // Send libusb_open_device_with_vid_pid packet.
@@ -410,6 +419,44 @@ irpc_usb_open_device_with_vid_pid(struct irpc_connection_info *ci,
         irpc_send_usb_open_device_with_vid_pid(ci);
     else
         irpc_recv_usb_open_device_with_vid_pid(ci, vendor_id, product_id, handle);
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark libusb_close
+// -----------------------------------------------------------------------------
+
+void
+irpc_recv_usb_close(struct irpc_connection_info *ci,
+                    irpc_device_handle *ihandle)
+{
+    /*
+     * TODO: Currently we can ignore ihandle since we hold
+     * only one usb_device_handle handle.  Later we need
+     * to add an identifier to the irpc_device_handle
+     * structure in order to determine the correct handle.
+     */
+    irpc_func_t func = IRPC_USB_CLOSE;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+}
+
+void
+irpc_send_usb_close(struct irpc_connection_info *info)
+{
+    libusb_close(irpc_handle);
+    irpc_handle = NULL;
+}
+
+void
+irpc_usb_close(struct irpc_connection_info *ci,
+               irpc_context_t ctx,
+               irpc_device_handle *ihandle)
+{
+    if (ctx == IRPC_CONTEXT_SERVER)
+        irpc_send_usb_close(ci);
+    else
+        irpc_recv_usb_close(ci, ihandle);
 }
 
 // -----------------------------------------------------------------------------
