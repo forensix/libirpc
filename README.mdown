@@ -42,6 +42,13 @@ on the client side type
 
 <b>$ ./irpc_client IP PORT</b>
 
+[Update]
+
+There is now another example which tries to detect an iDevice
+in recovery mode on the remote machine.
+
+<b>$ ./irpc_find_idevice IP PORT</b>
+
 When u want to access the server through a router, you need to enable
 port forwarding.
 

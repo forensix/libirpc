@@ -29,7 +29,6 @@ enum irpc_func {
     IRPC_USB_OPEN,                      /* libusb_open */
     IRPC_USB_CLAIM_INTERFACE,           /* libusb_claim_interface */
     IRPC_USB_RELEASE_INTERFACE,         /* libusb_release_interface */
-    
 };
 
 enum irpc_context {

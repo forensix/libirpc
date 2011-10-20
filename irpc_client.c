@@ -73,7 +73,7 @@ connect_or_die(const char *ip, int port)
     return sock;
 }
 
-irpc_retval_t
+static irpc_retval_t
 usb_init(struct irpc_info *info)
 {
     irpc_func_t func = IRPC_USB_INIT;
@@ -83,7 +83,7 @@ usb_init(struct irpc_info *info)
 }
 
 
-irpc_retval_t
+static void
 usb_print_device_list(struct irpc_info *info)
 {
     irpc_func_t func = IRPC_USB_GET_DEVICE_LIST;
@@ -113,7 +113,7 @@ usb_print_device_ids(struct irpc_info *info)
     irpc_retval_t retval = IRPC_FAILURE;
     
     struct irpc_device_list devlist = info->devlist;
-    info->dev = devlist.devs[0];
+    info->dev = devlist.devs[7];
         
     retval = irpc_call(func, ctx, info);
     if (retval == IRPC_FAILURE)
@@ -158,7 +158,7 @@ usb_open_device(struct irpc_info *info)
     irpc_func_t func = IRPC_USB_OPEN;
     irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
     
-    info->dev = info->devlist.devs[0];
+    info->dev = info->devlist.devs[7];
     
     return irpc_call(func, ctx, info);
 }
