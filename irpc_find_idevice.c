@@ -149,7 +149,7 @@ main(int argc, char **argv)
         return 1;
     }
     
-    printf("[*] Looking for recovery device...\n");
+    printf("[*] Looking on %s for recovery device...\n", argv[1]);
     try_to_find_idevice(&info);
     
     usb_exit(&info);
