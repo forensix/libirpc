@@ -228,17 +228,23 @@ int main(int argc, char **argv)
     //usb_open_device_with_vid_pid(&info);
     
     retval = usb_open_device(&info);
-    if (retval < 0)
+    if (retval < 0) {
         printf("irpc_client: usb_open failed\n");
-        
+        usb_exit(&info);
+        return retval;
+    }
+    
     retval = usb_claim_interface(&info);
-    if (retval < 0)
+    if (retval < 0) {
         printf("irpc_client: usb_claim_interface failed\n");
+        goto exit;
+    }
     
     retval = usb_release_interface(&info);
     if (retval < 0)
         printf("irpc_client: usb_release_interface failed\n");
     
+exit:
     usb_close(&info);
     usb_exit(&info);
     
