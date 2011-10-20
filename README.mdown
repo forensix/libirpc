@@ -16,6 +16,8 @@ methods are supported:
 - libusb_open_device_with_vid_pid
 - libusb_close
 - libusb_open
+- libusb_claim_interface
+- libusb_release_interface
 
 Compile
 -------
