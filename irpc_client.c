@@ -143,10 +143,33 @@ usb_open_device_with_vid_pid(struct irpc_info *info)
     irpc_func_t func = IRPC_USB_OPEN_DEVICE_WITH_VID_PID;
     irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
     
+    info->vendor_id = 0x05ac;
+    info->product_id = 0x8005;
+    
     irpc_call(func, ctx, info);
     
     printf("irpc_client: bus_number: %d\n", info->handle.dev.bus_number);
     printf("irpc_client: device_address: %d\n", info->handle.dev.device_address);
+}
+
+static irpc_retval_t
+usb_open_device(struct irpc_info *info)
+{
+    irpc_func_t func = IRPC_USB_OPEN;
+    irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
+    
+    info->dev = info->devlist.devs[1];
+    
+    return irpc_call(func, ctx, info);
+}
+
+static void
+usb_close(struct irpc_info *info)
+{
+    irpc_func_t func = IRPC_USB_CLOSE;
+    irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
+
+    irpc_call(func, ctx, info);
 }
 
 int main(int argc, char **argv)
@@ -174,14 +197,19 @@ int main(int argc, char **argv)
     usb_print_device_list(&info);
     
     retval = usb_print_device_ids(&info);
-    if (retval < 0)
+    if (retval < 0) {
         printf("irpc_client: usb_print_device_ids failed\n");
+        usb_exit(&info);
+        return retval;
+    }
     
-    info.vendor_id = 0x05ac;
-    info.product_id = 0x8005;
+    //usb_open_device_with_vid_pid(&info);
     
-    usb_open_device_with_vid_pid(&info);
-    
+    retval = usb_open_device(&info);
+    if (retval < 0)
+        printf("irpc_client: usb_open failed\n");
+        
+    usb_close(&info);
     usb_exit(&info);
     
     return retval;

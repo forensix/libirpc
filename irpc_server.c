@@ -57,6 +57,7 @@ static void
 server_loop(int sock)
 {
     struct irpc_info info;
+    struct timeval timeout;
     fd_set sockset;
     
     bzero(&info, sizeof(struct irpc_info));
@@ -64,7 +65,10 @@ server_loop(int sock)
     FD_ZERO(&sockset);
     FD_SET(sock, &sockset);
     
-    if (select(sock + 1, &sockset, NULL, NULL, NULL) == -1) {
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+    
+    if (select(sock + 1, &sockset, NULL, NULL, &timeout) == -1) {
         fprintf(stderr, "Error! select()\n");
         return;
     }
