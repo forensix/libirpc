@@ -13,6 +13,7 @@ methods are supported:
 - libusb_exit
 - libusb_get_device_list
 - libusb_get_device_descriptor
+- libusb_open_device_with_vid_pid
 
 Compile
 -------
