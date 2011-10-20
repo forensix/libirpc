@@ -39,6 +39,8 @@ static int dbgmsg = 1;
 #define IRPC_DEV_FMT        "S(iiii)"
 #define IRPC_DEVLIST_FMT    "iS(iiii)#"
 #define IRPC_DESC_FMT       "S(iiiiiiiiiiiiii)"
+#define IRPC_PRID_VEID_FMT  "ii"
+#define IRPC_DEV_HANDLE_FMT "S($(iiii))"
 
 // -----------------------------------------------------------------------------
 #pragma mark Libusb Utilities
@@ -333,6 +335,84 @@ irpc_usb_get_device_descriptor(struct irpc_connection_info *ci,
 }
 
 // -----------------------------------------------------------------------------
+#pragma mark libusb_open_device_with_vid_pid
+// -----------------------------------------------------------------------------
+
+void
+irpc_recv_usb_open_device_with_vid_pid(struct irpc_connection_info *ci,
+                                       int vendor_id,
+                                       int product_id,
+                                       irpc_device_handle *handle)
+{
+    tpl_node *tn = NULL;
+    irpc_func_t func = IRPC_USB_OPEN_DEVICE_WITH_VID_PID;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    // Send vendor and product id to server.
+    tn = tpl_map(IRPC_PRID_VEID_FMT, &vendor_id, &product_id);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+
+    // Read libusb_open_device_with_vid_pid packet.
+    tn = tpl_map(IRPC_DEV_HANDLE_FMT, handle);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+}
+
+void
+irpc_send_usb_open_device_with_vid_pid(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    libusb_device_handle *handle = NULL;
+    irpc_device_handle ihandle;
+    int vendor_id, product_id;
+    int sock = ci->client_sock;
+    
+    bzero(&ihandle, sizeof(irpc_device_handle));
+    
+    // Read vendor and product id from client.
+    tn = tpl_map(IRPC_PRID_VEID_FMT,
+                 &vendor_id,
+                 &product_id);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+   
+    handle = libusb_open_device_with_vid_pid(irpc_ctx, vendor_id, product_id);
+    if (!handle)
+        goto send;
+    
+    ihandle.dev.bus_number = handle->dev->bus_number;
+    ihandle.dev.device_address = handle->dev->device_address;
+    ihandle.dev.num_configurations = handle->dev->num_configurations;
+    ihandle.dev.session_data = handle->dev->session_data;
+    
+send:
+    // Send libusb_open_device_with_vid_pid packet.
+    tn = tpl_map(IRPC_DEV_HANDLE_FMT, &ihandle);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+void
+irpc_usb_open_device_with_vid_pid(struct irpc_connection_info *ci,
+                                  irpc_context_t ctx,
+                                  int vendor_id,
+                                  int product_id,
+                                  irpc_device_handle *handle)
+{
+    if (ctx == IRPC_CONTEXT_SERVER)
+        irpc_send_usb_open_device_with_vid_pid(ci);
+    else
+        irpc_recv_usb_open_device_with_vid_pid(ci, vendor_id, product_id, handle);
+}
+
+// -----------------------------------------------------------------------------
 #pragma mark Public API
 // -----------------------------------------------------------------------------
 
@@ -354,6 +434,9 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
         break;
     case IRPC_USB_GET_DEVICE_DESCRIPTOR:
         retval = irpc_usb_get_device_descriptor(&info->ci, ctx, &info->dev, &info->desc);
+        break;
+    case IRPC_USB_OPEN_DEVICE_WITH_VID_PID:
+        (void)irpc_usb_open_device_with_vid_pid(&info->ci, ctx, info->vendor_id, info->product_id, &info->handle);
         break;
     default:
         retval = IRPC_FAILURE;
