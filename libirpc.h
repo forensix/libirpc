@@ -27,6 +27,9 @@ enum irpc_func {
     IRPC_USB_OPEN_DEVICE_WITH_VID_PID,  /* libusb_open_device_with_vid_pid */
     IRPC_USB_CLOSE,                     /* libusb_close */
     IRPC_USB_OPEN,                      /* libusb_open */
+    IRPC_USB_CLAIM_INTERFACE,           /* libusb_claim_interface */
+    IRPC_USB_RELEASE_INTERFACE,         /* libusb_release_interface */
+    
 };
 
 enum irpc_context {
@@ -90,6 +93,7 @@ struct irpc_info {
     irpc_device_handle handle;
     int vendor_id;
     int product_id;
+    int intf;
 };
 
 typedef enum irpc_func irpc_func_t;

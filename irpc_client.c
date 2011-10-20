@@ -158,7 +158,29 @@ usb_open_device(struct irpc_info *info)
     irpc_func_t func = IRPC_USB_OPEN;
     irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
     
-    info->dev = info->devlist.devs[1];
+    info->dev = info->devlist.devs[0];
+    
+    return irpc_call(func, ctx, info);
+}
+
+static irpc_retval_t
+usb_claim_interface(struct irpc_info *info)
+{
+    irpc_func_t func = IRPC_USB_CLAIM_INTERFACE;
+    irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
+
+    info->intf = 0;
+    
+    return irpc_call(func, ctx, info);
+}
+
+static irpc_retval_t
+usb_release_interface(struct irpc_info *info)
+{
+    irpc_func_t func = IRPC_USB_RELEASE_INTERFACE;
+    irpc_context_t ctx = IRPC_CONTEXT_CLIENT;
+    
+    info->intf = 0;
     
     return irpc_call(func, ctx, info);
 }
@@ -209,6 +231,14 @@ int main(int argc, char **argv)
     if (retval < 0)
         printf("irpc_client: usb_open failed\n");
         
+    retval = usb_claim_interface(&info);
+    if (retval < 0)
+        printf("irpc_client: usb_claim_interface failed\n");
+    
+    retval = usb_release_interface(&info);
+    if (retval < 0)
+        printf("irpc_client: usb_release_interface failed\n");
+    
     usb_close(&info);
     usb_exit(&info);
     
