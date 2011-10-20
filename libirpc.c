@@ -485,6 +485,9 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
     case IRPC_USB_OPEN_DEVICE_WITH_VID_PID:
         (void)irpc_usb_open_device_with_vid_pid(&info->ci, ctx, info->vendor_id, info->product_id, &info->handle);
         break;
+    case IRPC_USB_CLOSE:
+        (void)irpc_usb_close(&info->ci, ctx, &info->handle);
+        break;
     default:
         retval = IRPC_FAILURE;
         break;
