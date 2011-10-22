@@ -21,6 +21,8 @@ methods are supported:
 - libusb_get_configuration
 - libusb_set_configuration
 - libusb_set_interface_alt_setting
+- libusb_reset_device
+- libusb_control_transfer
 
 Compile
 -------

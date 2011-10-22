@@ -38,15 +38,16 @@ static int dbgmsg = 1;
    printf(fmt, ##arg);      \
  } while (0)
 
-#define IRPC_INT_FMT            "i"
-#define IRPC_DEV_FMT            "S(iiii)"
-#define IRPC_DEVLIST_FMT        "iS(iiii)#"
-#define IRPC_DESC_FMT           "S(iiiiiiiiiiiiii)i"    // retval
-#define IRPC_PRID_VEID_FMT      "ii"
-#define IRPC_DEV_HANDLE_FMT     "S($(iiii))"
-#define IRPC_DEV_HANDLE_RET_FMT "S($(iiii))i"           // retval
-#define IRPC_DEV_HANDLE_INT_FMT IRPC_DEV_HANDLE_RET_FMT
-#define IRPC_DEV_HANDLE_INT_INT_FMT "S($(iiii))ii" 
+#define IRPC_INT_FMT                "i"
+#define IRPC_DEV_FMT                "S(iiii)"
+#define IRPC_DEVLIST_FMT            "iS(iiii)#"
+#define IRPC_DESC_FMT               "S(iiiiiiiiiiiiii)i"    // retval
+#define IRPC_PRID_VEID_FMT          "ii"
+#define IRPC_DEV_HANDLE_FMT         "S($(iiii))"
+#define IRPC_DEV_HANDLE_RET_FMT     "S($(iiii))i"           // retval
+#define IRPC_DEV_HANDLE_INT_FMT     IRPC_DEV_HANDLE_RET_FMT
+#define IRPC_DEV_HANDLE_INT_INT_FMT "S($(iiii))ii"
+#define IRPC_CTRL_TRANSFER_FMT      "S($(iiii))iiiisii"
 
 // -----------------------------------------------------------------------------
 #pragma mark Function Call Identification
@@ -920,6 +921,181 @@ irpc_usb_set_interface_alt_setting(struct irpc_connection_info *ci,
 }
 
 // -----------------------------------------------------------------------------
+#pragma mark libusb_reset_device
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_reset_device(struct irpc_connection_info *ci,
+                           irpc_device_handle *handle)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_RESET_DEVICE;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    // Send irpc_device_handle to server.
+    tn = tpl_map(IRPC_DEV_HANDLE_FMT, handle);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+    
+    // Read libusb_reset_device packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    return retval;
+}
+
+void
+irpc_send_usb_reset_device(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    int sock = ci->client_sock;
+    
+    // Read irpc_device_handle from client.
+    tn = tpl_map(IRPC_DEV_HANDLE_FMT, &handle);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_reset_device(irpc_handle) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_reset_device packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_reset_device(struct irpc_connection_info *ci,
+                      irpc_context_t ctx,
+                      irpc_device_handle *handle)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_reset_device(ci);
+    else
+        retval = irpc_recv_usb_reset_device(ci, handle);
+    
+    return retval;    
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark libusb_control_transfer
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_control_transfer(struct irpc_connection_info *ci,
+                               irpc_device_handle *handle,
+                               int req_type,
+                               int req,
+                               int val,
+                               int idx,
+                               char *data,
+                               int length,
+                               int timeout)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_CONTROL_TRANSFER;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    tn = tpl_map(IRPC_CTRL_TRANSFER_FMT,
+                 handle,
+                 &req_type,
+                 &req,
+                 &val,
+                 &idx,
+                 &data,
+                 &length,
+                 &timeout);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    // Read libusb_control_transfer packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    return retval;
+}
+
+void
+irpc_send_usb_control_transfer(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    int req_type, req, val, idx, length, timeout;
+    char *data;
+    int sock = ci->client_sock;
+
+    tn = tpl_map(IRPC_CTRL_TRANSFER_FMT,
+                 &handle,
+                 &req_type,
+                 &req,
+                 &val,
+                 &idx,
+                 &data,
+                 &length,
+                 &timeout);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_control_transfer(irpc_handle,
+                                req_type,
+                                req,
+                                val,
+                                idx,
+                                data,
+                                length,
+                                timeout) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_control_transfer packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_control_transfer(struct irpc_connection_info *ci,
+                          irpc_context_t ctx,
+                          irpc_device_handle *handle,
+                          int req_type,
+                          int req,
+                          int val,
+                          int idx,
+                          char *data,
+                          int length,
+                          int timeout)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_control_transfer(ci);
+    else
+        retval = irpc_recv_usb_control_transfer(ci, handle, req_type, req, val, idx, data, length, timeout);
+    
+    return retval;       
+}
+
+// -----------------------------------------------------------------------------
 #pragma mark Public API
 // -----------------------------------------------------------------------------
 
@@ -965,6 +1141,12 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
         break;
     case IRPC_USB_SET_INTERFACE_ALT_SETTING:
         retval = irpc_usb_set_interface_alt_setting(&info->ci, ctx, &info->handle, info->intf, info->alt_setting);
+        break;
+    case IRPC_USB_RESET_DEVICE:
+        retval = irpc_usb_reset_device(&info->ci, ctx, &info->handle);
+        break;
+    case IRPC_USB_CONTROL_TRANSFER:
+        retval = irpc_usb_control_transfer(&info->ci, ctx, &info->handle, info->req_type, info->req, info->val, info->idx, info->data, info->length, info->timeout);
         break;
     default:
         retval = IRPC_FAILURE;

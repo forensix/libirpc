@@ -32,6 +32,8 @@ enum irpc_func {
     IRPC_USB_GET_CONFIGURATION,         /* libusb_get_configuration */
     IRPC_USB_SET_CONFIGURATION,         /* libusb_set_configuration */
     IRPC_USB_SET_INTERFACE_ALT_SETTING, /* libusb_set_interface_alt_setting */
+    IRPC_USB_RESET_DEVICE,              /* libusb_reset_device */
+    IRPC_USB_CONTROL_TRANSFER,          /* libusb_control_transfer */
 };
 
 enum irpc_context {
@@ -98,6 +100,14 @@ struct irpc_info {
     int intf;
     int config;
     int alt_setting;
+    // Control transfer (add to separate struct…)
+    int req_type;
+    int req;
+    int val;
+    int idx;
+    char *data;
+    int length;
+    int timeout;
 };
 
 typedef enum irpc_func irpc_func_t;
