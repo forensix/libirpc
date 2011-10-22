@@ -34,6 +34,7 @@ enum irpc_func {
     IRPC_USB_SET_INTERFACE_ALT_SETTING, /* libusb_set_interface_alt_setting */
     IRPC_USB_RESET_DEVICE,              /* libusb_reset_device */
     IRPC_USB_CONTROL_TRANSFER,          /* libusb_control_transfer */
+    IRPC_USB_BULK_TRANSFER,             /* libusb_bulk_transfer */
 };
 
 enum irpc_context {
@@ -108,6 +109,12 @@ struct irpc_info {
     char *data;
     int length;
     int timeout;
+    // Bulk transfer (add to separate struct…)
+    char endpoint;
+    // char *data;
+    // int length;
+    int transfered;
+    // int timeout;
 };
 
 typedef enum irpc_func irpc_func_t;

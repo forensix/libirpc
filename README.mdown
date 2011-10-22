@@ -3,11 +3,10 @@ Description
 
 libirpc allows you to access USB devices over IP through RPC.
 
-Note
-----
+State
+-----
 
-Currently libirpc is in an early development stage. The following
-methods are supported:
+The following methods are supported:
 
 - libusb_init
 - libusb_exit
@@ -23,6 +22,7 @@ methods are supported:
 - libusb_set_interface_alt_setting
 - libusb_reset_device
 - libusb_control_transfer
+- libusb_bulk_transfer
 
 Compile
 -------

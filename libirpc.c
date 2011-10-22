@@ -48,6 +48,7 @@ static int dbgmsg = 1;
 #define IRPC_DEV_HANDLE_INT_FMT     IRPC_DEV_HANDLE_RET_FMT
 #define IRPC_DEV_HANDLE_INT_INT_FMT "S($(iiii))ii"
 #define IRPC_CTRL_TRANSFER_FMT      "S($(iiii))iiiisii"
+#define IRPC_BULK_TRANSFER_FMT      "S($(iiii))csiii"
 
 // -----------------------------------------------------------------------------
 #pragma mark Function Call Identification
@@ -1096,6 +1097,102 @@ irpc_usb_control_transfer(struct irpc_connection_info *ci,
 }
 
 // -----------------------------------------------------------------------------
+#pragma mark libusb_bulk_transfer
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_bulk_transfer(struct irpc_connection_info *ci,
+                            irpc_device_handle *handle,
+                            char endpoint,
+                            char *data,
+                            int length,
+                            int transfered,
+                            int timeout)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_BULK_TRANSFER;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    tn = tpl_map(IRPC_BULK_TRANSFER_FMT,
+                 handle,
+                 &endpoint,
+                 &data,
+                 &length,
+                 &transfered,
+                 &timeout);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    // Read libusb_bulk_transfer packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    return retval;
+}
+
+void
+irpc_send_usb_bulk_transfer(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    char endpoint, *data;
+    int length, transfered, timeout;
+    int sock = ci->client_sock;
+    
+    tn = tpl_map(IRPC_BULK_TRANSFER_FMT,
+                 &handle,
+                 &endpoint,
+                 &data,
+                 &length,
+                 &transfered,
+                 &timeout);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_bulk_transfer(irpc_handle,
+                             endpoint,
+                             data,
+                             length,
+                             &transfered,
+                             timeout) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_control_transfer packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_bulk_transfer(struct irpc_connection_info *ci,
+                       irpc_context_t ctx,
+                       irpc_device_handle *handle,
+                       char endpoint,
+                       char *data,
+                       int length,
+                       int transfered,
+                       int timeout)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_bulk_transfer(ci);
+    else
+        retval = irpc_recv_usb_bulk_transfer(ci, handle, endpoint, data, length, transfered, timeout);
+    
+    return retval;       
+}
+
+// -----------------------------------------------------------------------------
 #pragma mark Public API
 // -----------------------------------------------------------------------------
 
@@ -1147,6 +1244,9 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
         break;
     case IRPC_USB_CONTROL_TRANSFER:
         retval = irpc_usb_control_transfer(&info->ci, ctx, &info->handle, info->req_type, info->req, info->val, info->idx, info->data, info->length, info->timeout);
+        break;
+    case IRPC_USB_BULK_TRANSFER:
+        retval = irpc_usb_bulk_transfer(&info->ci, ctx, &info->handle, info->endpoint, info->data, info->length, info->transfered, info->timeout);
         break;
     default:
         retval = IRPC_FAILURE;
