@@ -46,6 +46,7 @@ static int dbgmsg = 1;
 #define IRPC_DEV_HANDLE_FMT     "S($(iiii))"
 #define IRPC_DEV_HANDLE_RET_FMT "S($(iiii))i"           // retval
 #define IRPC_DEV_HANDLE_INT_FMT IRPC_DEV_HANDLE_RET_FMT
+#define IRPC_DEV_HANDLE_INT_INT_FMT "S($(iiii))ii" 
 
 // -----------------------------------------------------------------------------
 #pragma mark Function Call Identification
@@ -721,6 +722,8 @@ irpc_recv_usb_get_configuration(struct irpc_connection_info *ci,
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
+    
+    return retval;
 }
 
 void
@@ -791,6 +794,8 @@ irpc_recv_usb_set_configuration(struct irpc_connection_info *ci,
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
+    
+    return retval;
 }
 
 void
@@ -830,6 +835,86 @@ irpc_usb_set_configuration(struct irpc_connection_info *ci,
         (void)irpc_send_usb_set_configuration(ci);
     else
         retval = irpc_recv_usb_set_configuration(ci, handle, config);
+    
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark libusb_set_interface_alt_setting
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_set_interface_alt_setting(struct irpc_connection_info *ci,
+                                        irpc_device_handle *handle,
+                                        int intf,
+                                        int alt_setting)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_SET_INTERFACE_ALT_SETTING;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    // Send irpc_device_handle, interface, and alt_setting to server.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_INT_FMT,
+                 handle,
+                 &intf,
+                 &alt_setting);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+    
+    // Read libusb_set_interface_alt_setting packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    return retval;
+}
+
+void
+irpc_send_usb_set_interface_alt_setting(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    int sock = ci->client_sock;
+    int intf, alt_setting;
+    
+    // Read irpc_device_handle, interface, and alt_setting from client.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_INT_FMT,
+                 &handle,
+                 &intf,
+                 &alt_setting);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_set_interface_alt_setting(irpc_handle, intf, alt_setting) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_set_interface_alt_setting packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_set_interface_alt_setting(struct irpc_connection_info *ci,
+                                   irpc_context_t ctx,
+                                   irpc_device_handle *handle,
+                                   int intf,
+                                   int alt_setting)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_set_interface_alt_setting(ci);
+    else
+        retval = irpc_recv_usb_set_interface_alt_setting(ci, handle, intf, alt_setting);
     
     return retval;
 }
@@ -877,6 +962,9 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
         break;
     case IRPC_USB_SET_CONFIGURATION:
         retval = irpc_usb_set_configuration(&info->ci, ctx, &info->handle, info->config);
+        break;
+    case IRPC_USB_SET_INTERFACE_ALT_SETTING:
+        retval = irpc_usb_set_interface_alt_setting(&info->ci, ctx, &info->handle, info->intf, info->alt_setting);
         break;
     default:
         retval = IRPC_FAILURE;

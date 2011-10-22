@@ -20,6 +20,7 @@ methods are supported:
 - libusb_release_interface
 - libusb_get_configuration
 - libusb_set_configuration
+- libusb_set_interface_alt_setting
 
 Compile
 -------
