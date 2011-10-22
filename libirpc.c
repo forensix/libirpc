@@ -38,14 +38,14 @@ static int dbgmsg = 1;
    printf(fmt, ##arg);      \
  } while (0)
 
-#define IRPC_INT_FMT                "i"
-#define IRPC_DEV_FMT                "S(iiii)"
-#define IRPC_DEVLIST_FMT            "iS(iiii)#"
-#define IRPC_DESC_FMT               "S(iiiiiiiiiiiiii)i"    // retval
-#define IRPC_PRID_VEID_FMT          "ii"
-#define IRPC_DEV_HANDLE_FMT         "S($(iiii))"
-#define IRPC_DEV_HANDLE_RET_FMT     "S($(iiii))i"           // retval
-#define IRPC_DEV_HANDLE_INTF_FMT    IRPC_DEV_HANDLE_RET_FMT
+#define IRPC_INT_FMT            "i"
+#define IRPC_DEV_FMT            "S(iiii)"
+#define IRPC_DEVLIST_FMT        "iS(iiii)#"
+#define IRPC_DESC_FMT           "S(iiiiiiiiiiiiii)i"    // retval
+#define IRPC_PRID_VEID_FMT      "ii"
+#define IRPC_DEV_HANDLE_FMT     "S($(iiii))"
+#define IRPC_DEV_HANDLE_RET_FMT "S($(iiii))i"           // retval
+#define IRPC_DEV_HANDLE_INT_FMT IRPC_DEV_HANDLE_RET_FMT
 
 // -----------------------------------------------------------------------------
 #pragma mark Function Call Identification
@@ -567,7 +567,7 @@ irpc_recv_usb_claim_interface(struct irpc_connection_info *ci,
     irpc_send_func(func, sock);
     
     // Send irpc_device_handle and interface to server.
-    tn = tpl_map(IRPC_DEV_HANDLE_INTF_FMT, handle, &intf);
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, handle, &intf);
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
     tpl_free(tn);
@@ -591,7 +591,7 @@ irpc_send_usb_claim_interface(struct irpc_connection_info *ci)
     int intf;
 
     // Read irpc_device_handle and interface from client.
-    tn = tpl_map(IRPC_DEV_HANDLE_INTF_FMT, &handle, &intf);
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, &handle, &intf);
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
@@ -639,7 +639,7 @@ irpc_recv_usb_release_interface(struct irpc_connection_info *ci,
     irpc_send_func(func, sock);
     
     // Send irpc_device_handle and interface to server.
-    tn = tpl_map(IRPC_DEV_HANDLE_INTF_FMT, handle, &intf);
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, handle, &intf);
     tpl_pack(tn, 0);
     tpl_dump(tn, TPL_FD, sock);
     tpl_free(tn);
@@ -663,7 +663,7 @@ irpc_send_usb_release_interface(struct irpc_connection_info *ci)
     int intf;
     
     // Read irpc_device_handle and interface from client.
-    tn = tpl_map(IRPC_DEV_HANDLE_INTF_FMT, &handle, &intf);
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, &handle, &intf);
     tpl_load(tn, TPL_FD, sock);
     tpl_unpack(tn, 0);
     tpl_free(tn);
@@ -690,6 +690,146 @@ irpc_usb_release_interface(struct irpc_connection_info *ci,
         (void)irpc_send_usb_release_interface(ci);
     else
         retval = irpc_recv_usb_release_interface(ci, handle, intf);
+    
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark libusb_get_configuration
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_get_configuration(struct irpc_connection_info *ci,
+                                irpc_device_handle *handle,
+                                int config)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_GET_CONFIGURATION;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    // Send irpc_device_handle and config to server.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, handle, &config);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+    
+    // Read libusb_get_configuration packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+}
+
+void
+irpc_send_usb_get_configuration(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    int sock = ci->client_sock;
+    int config;
+    
+    // Read irpc_device_handle and config from client.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, &handle, &config);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_get_configuration(irpc_handle, &config) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_get_configuration packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_get_configuration(struct irpc_connection_info *ci,
+                           irpc_context_t ctx,
+                           irpc_device_handle *handle,
+                           int config)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_get_configuration(ci);
+    else
+        retval = irpc_recv_usb_get_configuration(ci, handle, config);
+    
+    return retval;
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark libusb_set_configuration
+// -----------------------------------------------------------------------------
+
+irpc_retval_t
+irpc_recv_usb_set_configuration(struct irpc_connection_info *ci,
+                                irpc_device_handle *handle,
+                                int config)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval;
+    irpc_func_t func = IRPC_USB_SET_CONFIGURATION;
+    int sock = ci->server_sock;
+    
+    irpc_send_func(func, sock);
+    
+    // Send irpc_device_handle and config to server.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, handle, &config);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+    
+    // Read libusb_set_configuration packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+}
+
+void
+irpc_send_usb_set_configuration(struct irpc_connection_info *ci)
+{
+    tpl_node *tn = NULL;
+    irpc_retval_t retval = IRPC_SUCCESS;
+    irpc_device_handle handle;
+    int sock = ci->client_sock;
+    int config;
+    
+    // Read irpc_device_handle and config from client.
+    tn = tpl_map(IRPC_DEV_HANDLE_INT_FMT, &handle, &config);
+    tpl_load(tn, TPL_FD, sock);
+    tpl_unpack(tn, 0);
+    tpl_free(tn);
+    
+    if (libusb_set_configuration(irpc_handle, config) != 0)
+        retval = IRPC_FAILURE;
+    
+    // Send libusb_set_configuration packet.
+    tn = tpl_map(IRPC_INT_FMT, &retval);
+    tpl_pack(tn, 0);
+    tpl_dump(tn, TPL_FD, sock);
+    tpl_free(tn);
+}
+
+irpc_retval_t
+irpc_usb_set_configuration(struct irpc_connection_info *ci,
+                           irpc_context_t ctx,
+                           irpc_device_handle *handle,
+                           int config)
+{
+    irpc_retval_t retval = IRPC_SUCCESS;
+    
+    if (ctx == IRPC_CONTEXT_SERVER)
+        (void)irpc_send_usb_set_configuration(ci);
+    else
+        retval = irpc_recv_usb_set_configuration(ci, handle, config);
     
     return retval;
 }
@@ -731,6 +871,12 @@ irpc_call(irpc_func_t func, irpc_context_t ctx, struct irpc_info *info)
         break;
     case IRPC_USB_RELEASE_INTERFACE:
         retval = irpc_usb_release_interface(&info->ci, ctx, &info->handle, info->intf);
+        break;
+    case IRPC_USB_GET_CONFIGURATION:
+        retval = irpc_usb_get_configuration(&info->ci, ctx, &info->handle, info->config);
+        break;
+    case IRPC_USB_SET_CONFIGURATION:
+        retval = irpc_usb_set_configuration(&info->ci, ctx, &info->handle, info->config);
         break;
     default:
         retval = IRPC_FAILURE;

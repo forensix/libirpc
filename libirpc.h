@@ -29,6 +29,8 @@ enum irpc_func {
     IRPC_USB_OPEN,                      /* libusb_open */
     IRPC_USB_CLAIM_INTERFACE,           /* libusb_claim_interface */
     IRPC_USB_RELEASE_INTERFACE,         /* libusb_release_interface */
+    IRPC_USB_GET_CONFIGURATION,         /* libusb_get_configuration */
+    IRPC_USB_SET_CONFIGURATION,         /* libusb_set_configuration */
 };
 
 enum irpc_context {
@@ -93,6 +95,7 @@ struct irpc_info {
     int vendor_id;
     int product_id;
     int intf;
+    int config;
 };
 
 typedef enum irpc_func irpc_func_t;
