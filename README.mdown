@@ -23,6 +23,8 @@ The following methods are supported:
 - libusb_reset_device
 - libusb_control_transfer
 - libusb_bulk_transfer
+- libusb_clear_halt
+- libusb_get_string_descriptor_ascii
 
 Compile
 -------

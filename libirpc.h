@@ -1,56 +1,59 @@
 /**
-  * libirpc - libirpc.h
-  * Copyright (C) 2010 Manuel Gebele
-  *
-  * This program is free software: you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License as published by
-  * the Free Software Foundation, either version 3 of the License, or
-  * (at your option) any later version.
-  *
-  * This program is distributed in the hope that it will be useful,
-  * but WITHOUT ANY WARRANTY; without even the implied warranty of
-  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  * GNU General Public License for more details.
-  *
-  * You should have received a copy of the GNU General Public License
-  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * libirpc - libirpc.h
+ * Copyright (C) 2010 Manuel Gebele
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
 #define IRPC_MAX_DEVS 256           /* Max 256 devices */
+#define IRPC_MAX_DATA 1024          /* Max buffer size for usb transfers */
 
 /* Identifies the function call. */
 enum irpc_func {
-    IRPC_USB_INIT,                      /* libusb_init */
-    IRPC_USB_EXIT,                      /* libusb_exit */
-    IRPC_USB_GET_DEVICE_LIST,           /* libusb_get_device_list */
-    IRPC_USB_GET_DEVICE_DESCRIPTOR,     /* libusb_get_device_descriptor */
-    IRPC_USB_OPEN_DEVICE_WITH_VID_PID,  /* libusb_open_device_with_vid_pid */
-    IRPC_USB_CLOSE,                     /* libusb_close */
-    IRPC_USB_OPEN,                      /* libusb_open */
-    IRPC_USB_CLAIM_INTERFACE,           /* libusb_claim_interface */
-    IRPC_USB_RELEASE_INTERFACE,         /* libusb_release_interface */
-    IRPC_USB_GET_CONFIGURATION,         /* libusb_get_configuration */
-    IRPC_USB_SET_CONFIGURATION,         /* libusb_set_configuration */
-    IRPC_USB_SET_INTERFACE_ALT_SETTING, /* libusb_set_interface_alt_setting */
-    IRPC_USB_RESET_DEVICE,              /* libusb_reset_device */
-    IRPC_USB_CONTROL_TRANSFER,          /* libusb_control_transfer */
-    IRPC_USB_BULK_TRANSFER,             /* libusb_bulk_transfer */
+    IRPC_USB_INIT,                          /* libusb_init */
+    IRPC_USB_EXIT,                          /* libusb_exit */
+    IRPC_USB_GET_DEVICE_LIST,               /* libusb_get_device_list */
+    IRPC_USB_GET_DEVICE_DESCRIPTOR,         /* libusb_get_device_descriptor */
+    IRPC_USB_OPEN_DEVICE_WITH_VID_PID,      /* libusb_open_device_with_vid_pid */
+    IRPC_USB_CLOSE,                         /* libusb_close */
+    IRPC_USB_OPEN,                          /* libusb_open */
+    IRPC_USB_CLAIM_INTERFACE,               /* libusb_claim_interface */
+    IRPC_USB_RELEASE_INTERFACE,             /* libusb_release_interface */
+    IRPC_USB_GET_CONFIGURATION,             /* libusb_get_configuration */
+    IRPC_USB_SET_CONFIGURATION,             /* libusb_set_configuration */
+    IRPC_USB_SET_INTERFACE_ALT_SETTING,     /* libusb_set_interface_alt_setting */
+    IRPC_USB_RESET_DEVICE,                  /* libusb_reset_device */
+    IRPC_USB_CONTROL_TRANSFER,              /* libusb_control_transfer */
+    IRPC_USB_BULK_TRANSFER,                 /* libusb_bulk_transfer */
+    IRPC_USB_CLEAR_HALT,                    /* libusb_clear_halt */
+    IRPC_USB_GET_STRING_DESCRIPTOR_ASCII,   /* libusb_get_string_descriptor_ascii */
 };
 
 enum irpc_context {
-    IRPC_CONTEXT_CLIENT,                /* Client -> Server */
-    IRPC_CONTEXT_SERVER,                /* Server -> Client */
+    IRPC_CONTEXT_CLIENT,                    /* Client -> Server */
+    IRPC_CONTEXT_SERVER,                    /* Server -> Client */
 };
 
 typedef enum irpc_retval {
-    IRPC_FAILURE = -1,                  /* Function call was success */
-    IRPC_SUCCESS,                       /* Function call has failed */
+    IRPC_FAILURE = -1,                      /* Function call was success */
+    IRPC_SUCCESS,                           /* Function call has failed */
 } irpc_retval_t;
 
 /* Holds connection specific information. */
 struct irpc_connection_info {
-    int client_sock;                    /* Client socked fd */
-    int server_sock;                    /* Server socket fd */
+    int client_sock;                        /* Client socked fd */
+    int server_sock;                        /* Server socket fd */
 };
 
 /* Reflection of libusb_device. */
@@ -106,7 +109,8 @@ struct irpc_info {
     int req;
     int val;
     int idx;
-    char *data;
+    char data[IRPC_MAX_DATA];
+    int  buf[IRPC_MAX_DATA];
     int length;
     int timeout;
     // Bulk transfer (add to separate struct…)
@@ -115,6 +119,7 @@ struct irpc_info {
     // int length;
     int transfered;
     // int timeout;
+    int status;
 };
 
 typedef enum irpc_func irpc_func_t;
